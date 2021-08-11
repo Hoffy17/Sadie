@@ -26,7 +26,7 @@ namespace QuickScripts
                 this.transform.position = spawnPoint.position;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
           //  playerCameraPivot.position = this.transform.position;
 
