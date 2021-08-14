@@ -44,6 +44,7 @@ public class DialogueManager : MonoBehaviour
         nPCDialogueEnded = false;
     }
 
+    //Function called from DialogueTrigger.cs
     public void TriggerStartDialogue()
     {
         StartCoroutine(StartDialogue());
@@ -51,35 +52,41 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
+        //When the player finishes talking, press E to advance to NPC dialogue
         if (playerDialogueEnded == true)
             if (Input.GetKeyDown(KeyCode.E))
-                TriggerContinueNPCDialogue();
+                CheckContinueNPCDialogue();
 
+        //When the NPC finishes talking, press E to advance to player dialogue
         if (nPCDialogueEnded == true)
             if (Input.GetKeyDown(KeyCode.E))
-                TriggerContinuePlayerDialogue();
+                CheckContinuePlayerDialogue();
     }
 
+    //Function called when dialogue begins
     public IEnumerator StartDialogue()
     {
+        //Prevents the player from moving
         playerMovement.ToggleConversation();
 
+        //Animates the speech bubbles
         if (playerSpeakingFirst)
         {
             playerSpeechBubbleAnimator.SetTrigger("Open");
-
             yield return new WaitForSeconds(speechBubbleAnimationDelay);
+
             StartCoroutine(TypePlayerDialogue());
         }
         else
         {
             nPCSpeechBubbleAnimator.SetTrigger("Open");
-
             yield return new WaitForSeconds(speechBubbleAnimationDelay);
+
             StartCoroutine(TypeNPCDialogue());
         }
     }
 
+    //Types out the player's dialogue
     private IEnumerator TypePlayerDialogue()
     {
         foreach (char letter in playerDialogueSentences[playerIndex].ToCharArray())
@@ -91,6 +98,7 @@ public class DialogueManager : MonoBehaviour
         playerDialogueEnded = true;
     }
 
+    //Types out the NPC's dialogue
     private IEnumerator TypeNPCDialogue()
     {
         foreach (char letter in nPCDialogueSentences[nPCIndex].ToCharArray())
@@ -102,6 +110,55 @@ public class DialogueManager : MonoBehaviour
         nPCDialogueEnded = true;
     }
 
+    //When the NPC's dialogue ends, check if the player has any more dialogue
+    private void CheckContinuePlayerDialogue()
+    {
+        //uIAudioSource.Play();
+
+        nPCDialogueEnded = false;
+
+        //If the player has no more dialogue, close the NPC's speech bubble
+        //and allow the player to move again
+        if (playerIndex >= playerDialogueSentences.Length - 1)
+        {
+            nPCDialogueText.text = string.Empty;
+            nPCSpeechBubbleAnimator.SetTrigger("Close");
+            dialogueStarted = false;
+            playerIndex = 0;
+            nPCIndex = 0;
+
+            playerMovement.ToggleConversation();
+        }
+        //If the player has more dialogue, continue player dialogue
+        else
+            StartCoroutine(ContinuePlayerDialogue());
+    }
+
+    //When the player's dialogue ends, check if the NPC has any more dialogue
+    private void CheckContinueNPCDialogue()
+    {
+        //uIAudioSource.Play();
+
+        playerDialogueEnded = false;
+
+        //If the NPC has no more dialogue, close the player's speech bubble
+        //and allow the player to move again
+        if (nPCIndex >= nPCDialogueSentences.Length - 1)
+        {
+            playerDialogueText.text = string.Empty;
+            playerSpeechBubbleAnimator.SetTrigger("Close");
+            dialogueStarted = false;
+            playerIndex = 0;
+            nPCIndex = 0;
+
+            playerMovement.ToggleConversation();
+        }
+        //If the NPC has more dialogue, continue NPC dialogue
+        else
+            StartCoroutine(ContinueNPCDialogue());
+    }
+
+    //Closes the NPC's speech bubble and opens the player's speech bubble
     private IEnumerator ContinuePlayerDialogue()
     {
         nPCDialogueText.text = string.Empty;
@@ -120,6 +177,7 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(TypePlayerDialogue());
     }
 
+    //Closes the player's speech bubble and opens the NPC's speech bubble
     private IEnumerator ContinueNPCDialogue()
     {
         playerDialogueText.text = string.Empty;
@@ -136,47 +194,5 @@ public class DialogueManager : MonoBehaviour
             dialogueStarted = true;
 
         StartCoroutine(TypeNPCDialogue());
-    }
-
-    private void TriggerContinuePlayerDialogue()
-    {
-        //uIAudioSource.Play();
-
-        nPCDialogueEnded = false;
-
-        if (playerIndex >= playerDialogueSentences.Length - 1)
-        {
-            nPCDialogueText.text = string.Empty;
-            nPCSpeechBubbleAnimator.SetTrigger("Close");
-            playerDialogueEnded = false;
-            dialogueStarted = false;
-            playerIndex = 0;
-            nPCIndex = 0;
-
-            playerMovement.ToggleConversation();
-        }
-        else
-            StartCoroutine(ContinuePlayerDialogue());
-    }
-
-    private void TriggerContinueNPCDialogue()
-    {
-        //uIAudioSource.Play();
-
-        playerDialogueEnded = false;
-
-        if (nPCIndex >= nPCDialogueSentences.Length - 1)
-        {
-            playerDialogueText.text = string.Empty;
-            playerSpeechBubbleAnimator.SetTrigger("Close");
-            nPCDialogueEnded = false;
-            dialogueStarted = false;
-            playerIndex = 0;
-            nPCIndex = 0;
-
-            playerMovement.ToggleConversation();
-        }
-        else
-            StartCoroutine(ContinueNPCDialogue());
     }
 }

@@ -9,10 +9,10 @@ public class Movement : MonoBehaviour
     CharacterController cc;
     Rigidbody rb;
     float speed = 5;
-    bool isJumping;
+    //bool isJumping;
     bool groundedPlayer;
     private Vector3 playerVelocity;
-    private float jumpHeight = 1.0f;
+    //private float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
 
     private bool inConversation;
@@ -45,10 +45,10 @@ public class Movement : MonoBehaviour
             }
 
             // Changes the height position of the player..
-            if (Input.GetButton("Jump") && groundedPlayer)
+            /*if (Input.GetButton("Jump") && groundedPlayer)
             {
                 playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            }
+            }*/
 
             playerVelocity.y += gravityValue * Time.deltaTime;
             cc.Move(playerVelocity * Time.deltaTime);

@@ -6,20 +6,20 @@ public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private DialogueManager dialogueManager;
 
-    private bool triggered;
+    private bool triggeredConversation;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !triggered)
+        if (other.CompareTag("Player") && !triggeredConversation)
         {
             dialogueManager.TriggerStartDialogue();
-            triggered = true;
+            triggeredConversation = true;
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    /*private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player") && triggered)
             triggered = false;
-    }
+    }*/
 }
