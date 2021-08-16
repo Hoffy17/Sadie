@@ -55,12 +55,12 @@ public class DialogueManager : MonoBehaviour
         //When the player finishes talking, press E to advance to NPC dialogue
         if (playerDialogueEnded == true)
             if (Input.GetKeyDown(KeyCode.E))
-                CheckContinueNPCDialogue();
+                StartCoroutine(CheckContinueNPCDialogue());
 
         //When the NPC finishes talking, press E to advance to player dialogue
         if (nPCDialogueEnded == true)
             if (Input.GetKeyDown(KeyCode.E))
-                CheckContinuePlayerDialogue();
+                StartCoroutine(CheckContinuePlayerDialogue());
     }
 
     //Function called when dialogue begins
@@ -111,7 +111,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     //When the NPC's dialogue ends, check if the player has any more dialogue
-    private void CheckContinuePlayerDialogue()
+    private IEnumerator CheckContinuePlayerDialogue()
     {
         //uIAudioSource.Play();
 
@@ -123,6 +123,7 @@ public class DialogueManager : MonoBehaviour
         {
             nPCDialogueText.text = string.Empty;
             nPCSpeechBubbleAnimator.SetTrigger("Close");
+            yield return new WaitForSeconds(speechBubbleAnimationDelay);
             dialogueStarted = false;
             playerIndex = 0;
             nPCIndex = 0;
@@ -135,7 +136,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     //When the player's dialogue ends, check if the NPC has any more dialogue
-    private void CheckContinueNPCDialogue()
+    private IEnumerator CheckContinueNPCDialogue()
     {
         //uIAudioSource.Play();
 
@@ -147,6 +148,7 @@ public class DialogueManager : MonoBehaviour
         {
             playerDialogueText.text = string.Empty;
             playerSpeechBubbleAnimator.SetTrigger("Close");
+            yield return new WaitForSeconds(speechBubbleAnimationDelay);
             dialogueStarted = false;
             playerIndex = 0;
             nPCIndex = 0;

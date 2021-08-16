@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     //private float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
 
+    [SerializeField] private Animator lexiAnimator;
     private bool inConversation;
 
     private void Start()
@@ -39,8 +40,14 @@ public class Movement : MonoBehaviour
             Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             cc.Move(move * Time.deltaTime * speed);
 
+            if (move == Vector3.zero)
+            {
+                lexiAnimator.SetTrigger("Idle");
+            }
+
             if (move != Vector3.zero)
             {
+                lexiAnimator.SetTrigger("Running");
                 gameObject.transform.forward = move;
             }
 
@@ -52,6 +59,10 @@ public class Movement : MonoBehaviour
 
             playerVelocity.y += gravityValue * Time.deltaTime;
             cc.Move(playerVelocity * Time.deltaTime);
+        }
+        else
+        {
+            lexiAnimator.SetTrigger("Idle");
         }
     }
 
