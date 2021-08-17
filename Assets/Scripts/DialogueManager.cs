@@ -8,6 +8,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float typingSpeed;
 
     [SerializeField] private bool playerSpeakingFirst;
+    [SerializeField] private bool triggerChapterEnd;
 
     [Header("Dialogue - Text Mesh Pro")]
     [SerializeField] private TextMeshProUGUI playerDialogueText;
@@ -26,6 +27,8 @@ public class DialogueManager : MonoBehaviour
     [TextArea]
     [SerializeField] private string[] nPCDialogueSentences;
 
+    private GameManager gameManager;
+    private UIManager uIManager;
     private Movement playerMovement;
 
     private bool dialogueStarted;
@@ -39,6 +42,8 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
+        uIManager = FindObjectOfType<UIManager>();
         playerMovement = FindObjectOfType<Movement>();
         playerDialogueEnded = false;
         nPCDialogueEnded = false;
@@ -54,12 +59,12 @@ public class DialogueManager : MonoBehaviour
     {
         //When the player finishes talking, press E to advance to NPC dialogue
         if (playerDialogueEnded == true)
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
                 StartCoroutine(CheckContinueNPCDialogue());
 
         //When the NPC finishes talking, press E to advance to player dialogue
         if (nPCDialogueEnded == true)
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
                 StartCoroutine(CheckContinuePlayerDialogue());
     }
 
@@ -129,6 +134,9 @@ public class DialogueManager : MonoBehaviour
             nPCIndex = 0;
 
             playerMovement.ToggleConversation();
+
+            if (triggerChapterEnd)
+                uIManager.GetComponent<UIManager>().TriggerChapterEnd();
         }
         //If the player has more dialogue, continue player dialogue
         else
@@ -154,6 +162,9 @@ public class DialogueManager : MonoBehaviour
             nPCIndex = 0;
 
             playerMovement.ToggleConversation();
+
+            if (triggerChapterEnd)
+                uIManager.GetComponent<UIManager>().TriggerChapterEnd();
         }
         //If the NPC has more dialogue, continue NPC dialogue
         else

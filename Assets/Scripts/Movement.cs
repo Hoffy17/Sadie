@@ -6,20 +6,30 @@ public class Movement : MonoBehaviour
 {
     public bool startAtSpawn;
     public Transform spawnPoint;
+
     CharacterController cc;
     Rigidbody rb;
+
     float speed = 5;
+
     //bool isJumping;
     bool groundedPlayer;
+
     private Vector3 playerVelocity;
+
     //private float jumpHeight = 1.0f;
     private float gravityValue = -9.81f;
 
     [SerializeField] private Animator lexiAnimator;
+
+    private GameManager gameManager;
+
     private bool inConversation;
 
     private void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
+
         cc = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
 
@@ -29,7 +39,7 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!inConversation)
+        if (!inConversation && gameManager.gameState == GameState.game )
         {
             groundedPlayer = cc.isGrounded;
             if (groundedPlayer && playerVelocity.y < 0)

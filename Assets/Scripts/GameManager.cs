@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState { menu, game, pause };
+
 public class GameManager : MonoBehaviour
 {
-
-    /*[SerializeField] private Transform playerTransform;
-    [SerializeField] private List<Transform> npcTransform;*/
+    public GameState gameState;
 
     void Start()
     {
-        //SpeechBubble.Talk(playerTransform, new Vector3(3, 3), "Hello");
+
     }
 
     void Update()
     {
-        
+
     }
 }
