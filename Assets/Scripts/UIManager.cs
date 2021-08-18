@@ -52,11 +52,13 @@ public class UIManager : MonoBehaviour
     public void PlayGame()
     {
         SceneManager.LoadScene("Main");
+        Time.timeScale = 1;
     }
 
     public void QuitToMenu()
     {
         SceneManager.LoadScene("Menu");
+        Time.timeScale = 1;
     }
 
     public void QuitGame()
