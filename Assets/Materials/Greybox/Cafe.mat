@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Cafe
-  m_Shader: {fileID: -6465566751694194690, guid: 26d4be157bb10436287e516fab7543b7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: cbad1c56ccf07497eb12bed6b61ef713, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,6 +20,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_349c6d27ccb84af0b104fba443e685d9:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_6CAC6E60:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -81,8 +85,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_1a20128f282b4203b7ee15ce1b53d5dc: 0
+    - Vector1_2E867F1B: 2
     - Vector1_3954c31f6ca948e29f4608cb39f4867b: 0
+    - Vector1_533E85A7: 0.04
     - Vector1_6a897da4674e4f4a8c82cef8caf6fbd0: 1
+    - Vector1_7A45E60F: 0.4
+    - Vector1_945EDF0A: 0
+    - Vector1_B6B273F0: 1
+    - Vector1_C4F45CE4: 0
     - Vector1_a57f877aa2524f8fbed5a81f08287f92: 0.4
     - Vector1_c01303e5f9d7478bac91eedc8ee67ee0: 0.04
     - Vector1_df0f54464905450180a1d23ef4bfd603: 2
@@ -114,6 +124,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_69e2e77cd79f4e5bafff76cfeea3d9cb: {r: 0, g: 0, b: 0, a: 0}
+    - Color_94D2E292: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 0.5, g: 0.4068777, b: 0.379717, a: 1}
     - _Color: {r: 0.5019608, g: 0.40784314, b: 0.38039216, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
