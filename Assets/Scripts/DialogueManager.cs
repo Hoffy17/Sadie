@@ -8,6 +8,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float typingSpeed;
 
     [SerializeField] private bool playerSpeakingFirst;
+    [SerializeField] private bool triggerGetCoffee;
+    [SerializeField] private bool triggerGetCatFood;
     [SerializeField] private bool triggerChapterEnd;
 
     [Header("Dialogue - Text Mesh Pro")]
@@ -59,12 +61,12 @@ public class DialogueManager : MonoBehaviour
     {
         //When the player finishes talking, press E to advance to NPC dialogue
         if (playerDialogueEnded == true)
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
                 StartCoroutine(CheckContinueNPCDialogue());
 
         //When the NPC finishes talking, press E to advance to player dialogue
         if (nPCDialogueEnded == true)
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
                 StartCoroutine(CheckContinuePlayerDialogue());
     }
 
@@ -135,7 +137,11 @@ public class DialogueManager : MonoBehaviour
 
             playerMovement.ToggleConversation();
 
-            if (triggerChapterEnd)
+            if (triggerGetCoffee)
+                uIManager.GetComponent<UIManager>().TriggerGetCoffee();
+            else if (triggerGetCatFood)
+                uIManager.GetComponent<UIManager>().TriggerGetCatFood();
+            else if (triggerChapterEnd)
                 uIManager.GetComponent<UIManager>().TriggerChapterEnd();
         }
         //If the player has more dialogue, continue player dialogue
@@ -163,7 +169,11 @@ public class DialogueManager : MonoBehaviour
 
             playerMovement.ToggleConversation();
 
-            if (triggerChapterEnd)
+            if (triggerGetCoffee)
+                uIManager.GetComponent<UIManager>().TriggerGetCoffee();
+            else if (triggerGetCatFood)
+                uIManager.GetComponent<UIManager>().TriggerGetCatFood();
+            else if (triggerChapterEnd)
                 uIManager.GetComponent<UIManager>().TriggerChapterEnd();
         }
         //If the NPC has more dialogue, continue NPC dialogue

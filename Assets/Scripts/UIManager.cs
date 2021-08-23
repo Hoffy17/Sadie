@@ -8,10 +8,10 @@ public class UIManager : MonoBehaviour
 {
     private GameManager gameManager;
     [SerializeField] private GameObject pauseMenu;
-
-    [Header("Menu - Chapter End")]
+    [SerializeField] private GameObject getCoffeeMessage;
+    [SerializeField] private GameObject getCatFoodMessage;
     [SerializeField] private GameObject chapterEndMenu;
-    [SerializeField] private float chapterEndDelay = 1.0f;
+    [SerializeField] private float uIMessageDelay;
 
     public void Start()
     {
@@ -34,17 +34,47 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void TriggerGetCoffee()
+    {
+        StartCoroutine(GetCoffee());
+    }
+
+    public void TriggerGetCatFood()
+    {
+        StartCoroutine(GetCatFood());
+    }
+
     public void TriggerChapterEnd()
     {
         StartCoroutine(ChapterEnd());
     }
 
-    public IEnumerator ChapterEnd()
+    private IEnumerator GetCoffee()
     {
         if (gameManager.gameState == GameState.game)
         {
             gameManager.gameState = GameState.pause;
-            yield return new WaitForSeconds(chapterEndDelay);
+            yield return new WaitForSeconds(uIMessageDelay);
+            chapterEndMenu.SetActive(true);
+        }
+    }
+
+    private IEnumerator GetCatFood()
+    {
+        if (gameManager.gameState == GameState.game)
+        {
+            gameManager.gameState = GameState.pause;
+            yield return new WaitForSeconds(uIMessageDelay);
+            chapterEndMenu.SetActive(true);
+        }
+    }
+
+    private IEnumerator ChapterEnd()
+    {
+        if (gameManager.gameState == GameState.game)
+        {
+            gameManager.gameState = GameState.pause;
+            yield return new WaitForSeconds(uIMessageDelay);
             chapterEndMenu.SetActive(true);
         }
     }
