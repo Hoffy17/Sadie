@@ -8,10 +8,15 @@ public class UIManager : MonoBehaviour
 {
     private GameManager gameManager;
     [SerializeField] private GameObject pauseMenu;
-    [SerializeField] private GameObject getCoffeeMessage;
-    [SerializeField] private GameObject getCatFoodMessage;
-    [SerializeField] private GameObject chapterEndMenu;
     [SerializeField] private float uIMessageDelay;
+    [Header("Menu - Get Coffee")]
+    [SerializeField] private GameObject getCoffeeMessage;
+    [SerializeField] private Animator getCoffeeAnimator;
+    [Header("Menu - Get Cat Food")]
+    [SerializeField] private GameObject getCatFoodMessage;
+    [SerializeField] private Animator getCatFoodAnimator;
+    [Header("Menu - Chapter End")]
+    [SerializeField] private GameObject chapterEndMenu;
 
     public void Start()
     {
@@ -32,16 +37,26 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 1;
             gameManager.gameState = GameState.game;
         }
+
+        if (gameManager.gameState == GameState.pause && getCoffeeMessage.activeSelf == true)
+        {
+            StartCoroutine(GetCoffee_Off());
+        }
+
+        if (gameManager.gameState == GameState.pause && getCatFoodMessage.activeSelf == true)
+        {
+            StartCoroutine(GetCatFood_Off());
+        }
     }
 
     public void TriggerGetCoffee()
     {
-        StartCoroutine(GetCoffee());
+        StartCoroutine(GetCoffee_On());
     }
 
     public void TriggerGetCatFood()
     {
-        StartCoroutine(GetCatFood());
+        StartCoroutine(GetCatFood_On());
     }
 
     public void TriggerChapterEnd()
@@ -49,23 +64,45 @@ public class UIManager : MonoBehaviour
         StartCoroutine(ChapterEnd());
     }
 
-    private IEnumerator GetCoffee()
+    private IEnumerator GetCoffee_On()
     {
         if (gameManager.gameState == GameState.game)
         {
             gameManager.gameState = GameState.pause;
             yield return new WaitForSeconds(uIMessageDelay);
-            chapterEndMenu.SetActive(true);
+            getCoffeeMessage.SetActive(true);
         }
     }
 
-    private IEnumerator GetCatFood()
+    private IEnumerator GetCoffee_Off()
+    {
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        {
+            getCoffeeAnimator.SetTrigger("FadeOut");
+            yield return new WaitForSeconds(uIMessageDelay);
+            gameManager.gameState = GameState.game;
+            getCoffeeMessage.SetActive(false);
+        }
+    }
+
+    private IEnumerator GetCatFood_On()
     {
         if (gameManager.gameState == GameState.game)
         {
             gameManager.gameState = GameState.pause;
             yield return new WaitForSeconds(uIMessageDelay);
-            chapterEndMenu.SetActive(true);
+            getCatFoodMessage.SetActive(true);
+        }
+    }
+
+    private IEnumerator GetCatFood_Off()
+    {
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
+        {
+            getCatFoodAnimator.SetTrigger("FadeOut");
+            yield return new WaitForSeconds(uIMessageDelay);
+            gameManager.gameState = GameState.game;
+            getCatFoodMessage.SetActive(false);
         }
     }
 

@@ -6,6 +6,7 @@ using TMPro;
 public class DialogueManager : MonoBehaviour
 {
     [SerializeField] private float typingSpeed;
+    [SerializeField] private float dialogueDelay;
 
     [SerializeField] private bool playerSpeakingFirst;
     [SerializeField] private bool triggerGetCoffee;
@@ -75,6 +76,7 @@ public class DialogueManager : MonoBehaviour
     {
         //Prevents the player from moving
         playerMovement.ToggleConversation();
+        yield return new WaitForSeconds(dialogueDelay);
 
         //Animates the speech bubbles
         if (playerSpeakingFirst)
