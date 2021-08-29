@@ -5,42 +5,54 @@ using TMPro;
 
 public class DialogueManager : MonoBehaviour
 {
+    //The speed at which characters appear in text
     [SerializeField] private float typingSpeed;
+    //Delay between triggering dialogue and starting dialogue
     [SerializeField] private float dialogueDelay;
 
+    //Controls which character speaks first
     [SerializeField] private bool playerSpeakingFirst;
+    //Control UI events that appear when dialogue is over
     [SerializeField] private bool triggerGetCoffee;
     [SerializeField] private bool triggerGetCatFood;
     [SerializeField] private bool triggerChapterEnd;
 
+    //Text Mesh Pro components for the dialogue
     [Header("Dialogue - Text Mesh Pro")]
     [SerializeField] private TextMeshProUGUI playerDialogueText;
     [SerializeField] private TextMeshProUGUI nPCDialogueText;
 
+    //Animators for the speech bubbles
     [Header("Dialogue - Animation Controllers")]
     [SerializeField] private Animator playerSpeechBubbleAnimator;
     [SerializeField] private Animator nPCSpeechBubbleAnimator;
 
-    //[Header("Dialogue - UI Audio Source")]
-    //[SerializeField] private AudioSource uIAudioSource;
+    [Header("Dialogue - UI Audio Source")]
+    [SerializeField] private AudioSource sfxSpeechBubbleOpen;
+    [SerializeField] private AudioSource sfxSpeechBubbleClose;
 
+    //The dialogue itself is entered in these fields
     [Header("Dialogue - Sentences")]
     [TextArea]
     [SerializeField] private string[] playerDialogueSentences;
     [TextArea]
     [SerializeField] private string[] nPCDialogueSentences;
 
+    //Other scripts to be called
     private GameManager gameManager;
     private UIManager uIManager;
     private Movement playerMovement;
 
+    //Booleans that follow when dialogue begins and ends
     private bool dialogueStarted;
     private bool playerDialogueEnded;
     private bool nPCDialogueEnded;
 
+    //Integers that count up with each line of dialogue
     private int playerIndex;
     private int nPCIndex;
 
+    //Delay between when speech bubble animates and text appears
     private float speechBubbleAnimationDelay = 0.6f;
 
     private void Start()
@@ -60,12 +72,12 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        //When the player finishes talking, press E to advance to NPC dialogue
+        //When the player finishes talking, the player can advance NPC dialogue
         if (playerDialogueEnded == true)
             if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
                 StartCoroutine(CheckContinueNPCDialogue());
 
-        //When the NPC finishes talking, press E to advance to player dialogue
+        //When the NPC finishes talking, the player can advance player dialogue
         if (nPCDialogueEnded == true)
             if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) && gameManager.gameState == GameState.game)
                 StartCoroutine(CheckContinuePlayerDialogue());
@@ -82,6 +94,7 @@ public class DialogueManager : MonoBehaviour
         if (playerSpeakingFirst)
         {
             playerSpeechBubbleAnimator.SetTrigger("Open");
+            sfxSpeechBubbleOpen.Play();
             yield return new WaitForSeconds(speechBubbleAnimationDelay);
 
             StartCoroutine(TypePlayerDialogue());
@@ -89,6 +102,7 @@ public class DialogueManager : MonoBehaviour
         else
         {
             nPCSpeechBubbleAnimator.SetTrigger("Open");
+            sfxSpeechBubbleOpen.Play();
             yield return new WaitForSeconds(speechBubbleAnimationDelay);
 
             StartCoroutine(TypeNPCDialogue());
@@ -122,8 +136,6 @@ public class DialogueManager : MonoBehaviour
     //When the NPC's dialogue ends, check if the player has any more dialogue
     private IEnumerator CheckContinuePlayerDialogue()
     {
-        //uIAudioSource.Play();
-
         nPCDialogueEnded = false;
 
         //If the player has no more dialogue, close the NPC's speech bubble
@@ -132,6 +144,7 @@ public class DialogueManager : MonoBehaviour
         {
             nPCDialogueText.text = string.Empty;
             nPCSpeechBubbleAnimator.SetTrigger("Close");
+            sfxSpeechBubbleClose.Play();
             yield return new WaitForSeconds(speechBubbleAnimationDelay);
             dialogueStarted = false;
             playerIndex = 0;
@@ -154,8 +167,6 @@ public class DialogueManager : MonoBehaviour
     //When the player's dialogue ends, check if the NPC has any more dialogue
     private IEnumerator CheckContinueNPCDialogue()
     {
-        //uIAudioSource.Play();
-
         playerDialogueEnded = false;
 
         //If the NPC has no more dialogue, close the player's speech bubble
@@ -164,6 +175,7 @@ public class DialogueManager : MonoBehaviour
         {
             playerDialogueText.text = string.Empty;
             playerSpeechBubbleAnimator.SetTrigger("Close");
+            sfxSpeechBubbleClose.Play();
             yield return new WaitForSeconds(speechBubbleAnimationDelay);
             dialogueStarted = false;
             playerIndex = 0;
@@ -188,10 +200,12 @@ public class DialogueManager : MonoBehaviour
     {
         nPCDialogueText.text = string.Empty;
         nPCSpeechBubbleAnimator.SetTrigger("Close");
+        sfxSpeechBubbleClose.Play();
         yield return new WaitForSeconds(speechBubbleAnimationDelay);
 
         playerDialogueText.text = string.Empty;
         playerSpeechBubbleAnimator.SetTrigger("Open");
+        sfxSpeechBubbleOpen.Play();
         yield return new WaitForSeconds(speechBubbleAnimationDelay);
 
         if (dialogueStarted)
@@ -207,10 +221,12 @@ public class DialogueManager : MonoBehaviour
     {
         playerDialogueText.text = string.Empty;
         playerSpeechBubbleAnimator.SetTrigger("Close");
+        sfxSpeechBubbleClose.Play();
         yield return new WaitForSeconds(speechBubbleAnimationDelay);
 
         nPCDialogueText.text = string.Empty;
         nPCSpeechBubbleAnimator.SetTrigger("Open");
+        sfxSpeechBubbleOpen.Play();
         yield return new WaitForSeconds(speechBubbleAnimationDelay);
 
         if (dialogueStarted)

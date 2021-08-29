@@ -7,14 +7,4 @@ public enum GameState { menu, game, pause };
 public class GameManager : MonoBehaviour
 {
     public GameState gameState;
-
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
 }

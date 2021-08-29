@@ -4,110 +4,55 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    public bool startAtSpawn;
-    public Transform spawnPoint;
+    //Player movement
+    private CharacterController characterController;
+    public float speed;
+    //Controls whether the player can move
+    private bool inConversation;
 
-    CharacterController cc;
-    Rigidbody rb;
-
-    float speed = 5;
-
-    //bool isJumping;
-    bool groundedPlayer;
-
-    private Vector3 playerVelocity;
-
-    //private float jumpHeight = 1.0f;
-    private float gravityValue = -9.81f;
-
+    //Controls player character's animations
     [SerializeField] private Animator lexiAnimator;
 
+    //Controls game states
     private GameManager gameManager;
-
-    private bool inConversation;
 
     private void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-
-        cc = GetComponent<CharacterController>();
-        rb = GetComponent<Rigidbody>();
-
-        if (startAtSpawn && spawnPoint != null)
-            this.transform.position = spawnPoint.position;
+        characterController = GetComponent<CharacterController>();
     }
 
     private void FixedUpdate()
     {
-        if (!inConversation && gameManager.gameState == GameState.game )
+        //If the player is not in conversation with an NPC, allow the player to move
+        if (!inConversation && gameManager.gameState == GameState.game)
         {
-            groundedPlayer = cc.isGrounded;
-            if (groundedPlayer && playerVelocity.y < 0)
-            {
-                playerVelocity.y = 0f;
-            }
-
+            //Get movement input from X and Z axes and calculate movement velocity with the character controller
             Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            cc.Move(move * Time.deltaTime * speed);
+            characterController.Move(move * Time.deltaTime * speed);
 
+            //If the player is not moving, play idle animation
             if (move == Vector3.zero)
             {
                 lexiAnimator.SetTrigger("Idle");
             }
-
-            if (move != Vector3.zero)
+            //Otherwise if the player is moving, play running animation and move the player game object
+            else if (move != Vector3.zero)
             {
                 lexiAnimator.SetTrigger("Running");
                 gameObject.transform.forward = move;
             }
-
-            // Changes the height position of the player..
-            /*if (Input.GetButton("Jump") && groundedPlayer)
-            {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            }*/
-
-            playerVelocity.y += gravityValue * Time.deltaTime;
-            cc.Move(playerVelocity * Time.deltaTime);
         }
+        //If the player is in conversation with an NPC, play idle animation
         else
         {
             lexiAnimator.SetTrigger("Idle");
         }
     }
 
+    //When this function is called, toggle the state of being in conversation with an NPC
     public void ToggleConversation()
     {
         inConversation = !inConversation;
-    }
-
-    //This script pushes all rigidbodies that the character touches
-    float pushPower = 2.0f;
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        Rigidbody body = hit.collider.attachedRigidbody;
-
-        // no rigidbody
-        if (body == null || body.isKinematic)
-        {
-            return;
-        }
-
-        // We dont want to push objects below us
-        if (hit.moveDirection.y < -0.3)
-        {
-            return;
-        }
-
-        // Calculate push direction from move direction,
-        // we only push objects to the sides never up and down
-        Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
-
-        // If you know how fast your character is trying to move,
-        // then you can also multiply the push velocity by that.
-
-        // Apply the push
-        body.velocity = pushDir * pushPower;
     }
 }
